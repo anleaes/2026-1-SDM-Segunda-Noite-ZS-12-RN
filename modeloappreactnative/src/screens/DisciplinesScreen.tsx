@@ -4,7 +4,9 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -43,7 +45,7 @@ const DisciplinesScreen = ({ navigation }: Props) => {
     }, []),
   );
 
-  const handleDelete = async (id: number) => {
+  const deleteDiscipline = async (id: number) => {
     try {
       await fetch(`http://localhost:8000/disciplina/${id}/`, {
         method: "DELETE",
@@ -51,6 +53,27 @@ const DisciplinesScreen = ({ navigation }: Props) => {
       setDisciplines((prev) => prev.filter((d) => d.id !== id));
     } catch (error) {
       console.error("Erro ao excluir disciplina:", error);
+    }
+  };
+
+  const confirmDelete = (item: Discipline) => {
+    const message = `Tem certeza que deseja excluir "${item.name}"?`;
+
+    if (Platform.OS === "web") {
+      // No navegador, usa window.confirm
+      if (window.confirm(message)) {
+        deleteDiscipline(item.id);
+      }
+    } else {
+      // No celular, usa o Alert nativo
+      Alert.alert("Confirmar exclusão", message, [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Excluir",
+          style: "destructive",
+          onPress: () => deleteDiscipline(item.id),
+        },
+      ]);
     }
   };
 
@@ -70,7 +93,7 @@ const DisciplinesScreen = ({ navigation }: Props) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.deleteButton}
-          onPress={() => handleDelete(item.id)}
+          onPress={() => confirmDelete(item)}
         >
           <Text style={styles.buttonText}>Excluir</Text>
         </TouchableOpacity>
