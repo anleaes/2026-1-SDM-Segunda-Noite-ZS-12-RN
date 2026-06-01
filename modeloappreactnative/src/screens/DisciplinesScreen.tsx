@@ -48,6 +48,16 @@ const DisciplinesScreen = ({ navigation }: Props) => {
       <Text style={styles.name}>{item.name}</Text>
       <Text style={styles.info}>Código: {item.code}</Text>
       <Text style={styles.info}>Carga horária: {item.workload}h</Text>
+      <View style={styles.row}>
+        <TouchableOpacity
+          style={styles.editButton}
+          onPress={() =>
+            navigation.navigate("EditDiscipline", { discipline: item })
+          }
+        >
+          <Text style={styles.buttonText}>Editar</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 
@@ -108,6 +118,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#666",
     marginTop: 4,
+  },
+  row: {
+    flexDirection: "row",
+    marginTop: 8,
+    alignSelf: "flex-end",
+  },
+  editButton: {
+    backgroundColor: "#4B7BE5",
+    padding: 8,
+    borderRadius: 6,
+    marginRight: 8,
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "500",
   },
   fab: {
     position: "absolute",
