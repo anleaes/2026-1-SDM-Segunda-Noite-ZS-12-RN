@@ -1,12 +1,14 @@
 import { Ionicons } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import CustomDrawerContent from "../components/CustomDrawerContent";
+import CreateDisciplineScreen from "../screens/CreateDisciplineScreen";
 import DisciplinesScreen from "../screens/DisciplinesScreen";
 import HomeScreen from "../screens/HomeScreen";
 
 export type DrawerParamList = {
   Home: undefined;
   Disciplines: undefined;
+  CreateDiscipline: undefined;
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -42,6 +44,14 @@ const DrawerNavigator = () => {
             <Ionicons name="book-outline" size={size} color={color} />
           ),
           title: "Disciplinas",
+        }}
+      />
+      <Drawer.Screen
+        name="CreateDiscipline"
+        component={CreateDisciplineScreen}
+        options={{
+          drawerItemStyle: { display: "none" },
+          title: "Nova disciplina",
         }}
       />
     </Drawer.Navigator>
