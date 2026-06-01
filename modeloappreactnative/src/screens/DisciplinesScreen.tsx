@@ -1,5 +1,6 @@
 import { DrawerScreenProps } from "@react-navigation/drawer";
-import { useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -20,7 +21,25 @@ export type Discipline = {
 
 const DisciplinesScreen = ({ navigation }: Props) => {
   const [disciplines, setDisciplines] = useState<Discipline[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const fetchDisciplines = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("http://localhost:8000/disciplina/");
+      const data = await response.json();
+      setDisciplines(data);
+    } catch (error) {
+      console.error("Erro ao buscar disciplinas:", error);
+    }
+    setLoading(false);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchDisciplines();
+    }, []),
+  );
 
   const renderItem = ({ item }: { item: Discipline }) => (
     <View style={styles.card}>
