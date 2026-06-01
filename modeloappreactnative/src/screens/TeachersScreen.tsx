@@ -1,5 +1,6 @@
 import { DrawerScreenProps } from "@react-navigation/drawer";
-import { useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback, useState } from "react";
 import {
     ActivityIndicator,
     FlatList,
@@ -20,7 +21,6 @@ export type Teacher = {
   registro: string;
 };
 
-// Mapeia o valor do banco pra um label legível
 const TITULACAO_LABELS: Record<Teacher["titulacao"], string> = {
   graduado: "Graduado",
   especialista: "Especialista",
@@ -30,7 +30,25 @@ const TITULACAO_LABELS: Record<Teacher["titulacao"], string> = {
 
 const TeachersScreen = ({ navigation }: Props) => {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const fetchTeachers = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("http://localhost:8000/professor/");
+      const data = await response.json();
+      setTeachers(data);
+    } catch (error) {
+      console.error("Erro ao buscar professores:", error);
+    }
+    setLoading(false);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchTeachers();
+    }, []),
+  );
 
   const renderItem = ({ item }: { item: Teacher }) => (
     <View style={styles.card}>
