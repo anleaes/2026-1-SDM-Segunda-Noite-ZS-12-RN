@@ -43,6 +43,17 @@ const DisciplinesScreen = ({ navigation }: Props) => {
     }, []),
   );
 
+  const handleDelete = async (id: number) => {
+    try {
+      await fetch(`http://localhost:8000/disciplina/${id}/`, {
+        method: "DELETE",
+      });
+      setDisciplines((prev) => prev.filter((d) => d.id !== id));
+    } catch (error) {
+      console.error("Erro ao excluir disciplina:", error);
+    }
+  };
+
   const renderItem = ({ item }: { item: Discipline }) => (
     <View style={styles.card}>
       <Text style={styles.name}>{item.name}</Text>
@@ -56,6 +67,12 @@ const DisciplinesScreen = ({ navigation }: Props) => {
           }
         >
           <Text style={styles.buttonText}>Editar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={() => handleDelete(item.id)}
+        >
+          <Text style={styles.buttonText}>Excluir</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -129,6 +146,11 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 6,
     marginRight: 8,
+  },
+  deleteButton: {
+    backgroundColor: "#E54848",
+    padding: 8,
+    borderRadius: 6,
   },
   buttonText: {
     color: "#fff",
