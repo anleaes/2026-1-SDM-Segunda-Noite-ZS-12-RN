@@ -2,13 +2,15 @@ import { Ionicons } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import CustomDrawerContent from "../components/CustomDrawerContent";
 import CreateDisciplineScreen from "../screens/CreateDisciplineScreen";
-import DisciplinesScreen from "../screens/DisciplinesScreen";
+import DisciplinesScreen, { Discipline } from "../screens/DisciplinesScreen";
+import EditDisciplineScreen from "../screens/EditDisciplineScreen";
 import HomeScreen from "../screens/HomeScreen";
 
 export type DrawerParamList = {
   Home: undefined;
   Disciplines: undefined;
   CreateDiscipline: undefined;
+  EditDiscipline: { discipline: Discipline };
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -52,6 +54,14 @@ const DrawerNavigator = () => {
         options={{
           drawerItemStyle: { display: "none" },
           title: "Nova disciplina",
+        }}
+      />
+      <Drawer.Screen
+        name="EditDiscipline"
+        component={EditDisciplineScreen}
+        options={{
+          drawerItemStyle: { display: "none" },
+          title: "Editar disciplina",
         }}
       />
     </Drawer.Navigator>
