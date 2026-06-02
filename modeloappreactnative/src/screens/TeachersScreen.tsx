@@ -52,6 +52,17 @@ const TeachersScreen = ({ navigation }: Props) => {
     }, []),
   );
 
+  const handleDelete = async (id: number) => {
+    try {
+      await fetch(`http://localhost:8000/professor/${id}/`, {
+        method: "DELETE",
+      });
+      setTeachers((prev) => prev.filter((t) => t.id !== id));
+    } catch (error) {
+      console.error("Erro ao excluir professor:", error);
+    }
+  };
+
   const renderItem = ({ item }: { item: Teacher }) => (
     <View style={styles.card}>
       <Text style={styles.name}>{item.name}</Text>
@@ -67,6 +78,12 @@ const TeachersScreen = ({ navigation }: Props) => {
           onPress={() => navigation.navigate("EditTeacher", { teacher: item })}
         >
           <Text style={styles.buttonText}>Editar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={() => handleDelete(item.id)}
+        >
+          <Text style={styles.buttonText}>Excluir</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -140,6 +157,11 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 6,
     marginRight: 8,
+  },
+  deleteButton: {
+    backgroundColor: "#E54848",
+    padding: 8,
+    borderRadius: 6,
   },
   buttonText: {
     color: "#fff",
