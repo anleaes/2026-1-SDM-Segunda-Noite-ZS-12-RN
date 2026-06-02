@@ -61,6 +61,14 @@ const TeachersScreen = ({ navigation }: Props) => {
         Titulação: {TITULACAO_LABELS[item.titulacao]}
       </Text>
       <Text style={styles.info}>Registro: {item.registro}</Text>
+      <View style={styles.row}>
+        <TouchableOpacity
+          style={styles.editButton}
+          onPress={() => navigation.navigate("EditTeacher", { teacher: item })}
+        >
+          <Text style={styles.buttonText}>Editar</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 
@@ -121,6 +129,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#666",
     marginTop: 4,
+  },
+  row: {
+    flexDirection: "row",
+    marginTop: 8,
+    alignSelf: "flex-end",
+  },
+  editButton: {
+    backgroundColor: "#4B7BE5",
+    padding: 8,
+    borderRadius: 6,
+    marginRight: 8,
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "500",
   },
   fab: {
     position: "absolute",

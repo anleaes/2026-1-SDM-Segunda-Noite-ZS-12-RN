@@ -5,8 +5,9 @@ import CreateDisciplineScreen from "../screens/CreateDisciplineScreen";
 import CreateTeacherScreen from "../screens/CreateTeacherScreen";
 import DisciplinesScreen, { Discipline } from "../screens/DisciplinesScreen";
 import EditDisciplineScreen from "../screens/EditDisciplineScreen";
+import EditTeacherScreen from "../screens/EditTeacherScreen";
 import HomeScreen from "../screens/HomeScreen";
-import TeachersScreen from "../screens/TeachersScreen";
+import TeachersScreen, { Teacher } from "../screens/TeachersScreen";
 
 export type DrawerParamList = {
   Home: undefined;
@@ -15,6 +16,7 @@ export type DrawerParamList = {
   EditDiscipline: { discipline: Discipline };
   Teachers: undefined;
   CreateTeacher: undefined;
+  EditTeacher: { teacher: Teacher };
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -84,6 +86,14 @@ const DrawerNavigator = () => {
         options={{
           drawerItemStyle: { display: "none" },
           title: "Novo professor",
+        }}
+      />
+      <Drawer.Screen
+        name="EditTeacher"
+        component={EditTeacherScreen}
+        options={{
+          drawerItemStyle: { display: "none" },
+          title: "Editar professor",
         }}
       />
     </Drawer.Navigator>
