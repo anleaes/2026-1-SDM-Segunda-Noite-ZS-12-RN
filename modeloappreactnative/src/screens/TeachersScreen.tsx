@@ -4,7 +4,9 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useState } from "react";
 import {
     ActivityIndicator,
+    Alert,
     FlatList,
+    Platform,
     StyleSheet,
     Text,
     TouchableOpacity,
@@ -52,7 +54,7 @@ const TeachersScreen = ({ navigation }: Props) => {
     }, []),
   );
 
-  const handleDelete = async (id: number) => {
+  const deleteTeacher = async (id: number) => {
     try {
       await fetch(`http://localhost:8000/professor/${id}/`, {
         method: "DELETE",
@@ -60,6 +62,25 @@ const TeachersScreen = ({ navigation }: Props) => {
       setTeachers((prev) => prev.filter((t) => t.id !== id));
     } catch (error) {
       console.error("Erro ao excluir professor:", error);
+    }
+  };
+
+  const confirmDelete = (item: Teacher) => {
+    const message = `Tem certeza que deseja excluir "${item.name}"?`;
+
+    if (Platform.OS === "web") {
+      if (window.confirm(message)) {
+        deleteTeacher(item.id);
+      }
+    } else {
+      Alert.alert("Confirmar exclusão", message, [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Excluir",
+          style: "destructive",
+          onPress: () => deleteTeacher(item.id),
+        },
+      ]);
     }
   };
 
@@ -81,7 +102,7 @@ const TeachersScreen = ({ navigation }: Props) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.deleteButton}
-          onPress={() => handleDelete(item.id)}
+          onPress={() => confirmDelete(item)}
         >
           <Text style={styles.buttonText}>Excluir</Text>
         </TouchableOpacity>
