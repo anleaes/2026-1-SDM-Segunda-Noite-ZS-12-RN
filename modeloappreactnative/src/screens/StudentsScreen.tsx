@@ -1,5 +1,6 @@
 import { DrawerScreenProps } from "@react-navigation/drawer";
-import { useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback, useState } from "react";
 import {
     ActivityIndicator,
     FlatList,
@@ -18,8 +19,13 @@ export type Student = {
   email: string;
   status: "ativo" | "inativo" | "trancado";
   matricula: string;
-  data_nascimento: string; // formato ISO "YYYY-MM-DD"
-  responsaveis: number[]; // array de IDs
+  data_nascimento: string;
+  responsaveis: number[];
+};
+
+type ParentBasic = {
+  id: number;
+  name: string;
 };
 
 const STATUS_LABELS: Record<Student["status"], string> = {
@@ -28,7 +34,6 @@ const STATUS_LABELS: Record<Student["status"], string> = {
   trancado: "Trancado",
 };
 
-// Converte "2010-05-15" para "15/05/2010"
 const formatDate = (isoDate: string) => {
   const [year, month, day] = isoDate.split("-");
   return `${day}/${month}/${year}`;
@@ -37,10 +42,41 @@ const formatDate = (isoDate: string) => {
 const StudentsScreen = ({ navigation }: Props) => {
   const [students, setStudents] = useState<Student[]>([]);
   const [parentNames, setParentNames] = useState<Record<number, string>>({});
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const fetchStudentsAndParents = async () => {
+    setLoading(true);
+    try {
+      // Faz os dois fetches em paralelo
+      const [studentsResponse, parentsResponse] = await Promise.all([
+        fetch("http://localhost:8000/estudante/"),
+        fetch("http://localhost:8000/responsavel/"),
+      ]);
+
+      const studentsData: Student[] = await studentsResponse.json();
+      const parentsData: ParentBasic[] = await parentsResponse.json();
+
+      // Cria dicionário { 21: "Ana Silva", 22: "Pedro Souza" }
+      const namesMap: Record<number, string> = {};
+      parentsData.forEach((p) => {
+        namesMap[p.id] = p.name;
+      });
+
+      setStudents(studentsData);
+      setParentNames(namesMap);
+    } catch (error) {
+      console.error("Erro ao buscar alunos e responsáveis:", error);
+    }
+    setLoading(false);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchStudentsAndParents();
+    }, []),
+  );
 
   const renderItem = ({ item }: { item: Student }) => {
-    // Constrói a string com os nomes dos responsáveis
     const responsaveisNomes = item.responsaveis
       .map((id) => parentNames[id] || "Desconhecido")
       .join(", ");
