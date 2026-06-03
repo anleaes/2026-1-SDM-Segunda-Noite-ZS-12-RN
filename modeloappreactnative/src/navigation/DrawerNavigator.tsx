@@ -13,6 +13,7 @@ import EditParentScreen from "../screens/EditParentScreen";
 import EditTeacherScreen from "../screens/EditTeacherScreen";
 import HomeScreen from "../screens/HomeScreen";
 import ParentsScreen, { Parent } from "../screens/ParentsScreen";
+import StudentsScreen from "../screens/StudentsScreen";
 import TeachersScreen, { Teacher } from "../screens/TeachersScreen";
 
 export type DrawerParamList = {
@@ -29,6 +30,7 @@ export type DrawerParamList = {
   Parents: undefined;
   CreateParent: undefined;
   EditParent: { parent: Parent };
+  Students: undefined;
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -155,6 +157,16 @@ const DrawerNavigator = () => {
         options={{
           drawerItemStyle: { display: "none" },
           title: "Editar responsável",
+        }}
+      />
+      <Drawer.Screen
+        name="Students"
+        component={StudentsScreen}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="person-outline" size={size} color={color} />
+          ),
+          title: "Alunos",
         }}
       />
     </Drawer.Navigator>
