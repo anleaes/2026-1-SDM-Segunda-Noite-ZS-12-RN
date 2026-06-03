@@ -4,7 +4,9 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -53,7 +55,7 @@ const ParentsScreen = ({ navigation }: Props) => {
     }, []),
   );
 
-  const handleDelete = async (id: number) => {
+  const deleteParent = async (id: number) => {
     try {
       await fetch(`http://localhost:8000/responsavel/${id}/`, {
         method: "DELETE",
@@ -61,6 +63,25 @@ const ParentsScreen = ({ navigation }: Props) => {
       setParents((prev) => prev.filter((p) => p.id !== id));
     } catch (error) {
       console.error("Erro ao excluir responsável:", error);
+    }
+  };
+
+  const confirmDelete = (item: Parent) => {
+    const message = `Tem certeza que deseja excluir "${item.name}"?`;
+
+    if (Platform.OS === "web") {
+      if (window.confirm(message)) {
+        deleteParent(item.id);
+      }
+    } else {
+      Alert.alert("Confirmar exclusão", message, [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Excluir",
+          style: "destructive",
+          onPress: () => deleteParent(item.id),
+        },
+      ]);
     }
   };
 
@@ -84,7 +105,7 @@ const ParentsScreen = ({ navigation }: Props) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.deleteButton}
-          onPress={() => handleDelete(item.id)}
+          onPress={() => confirmDelete(item)}
         >
           <Text style={styles.buttonText}>Excluir</Text>
         </TouchableOpacity>
