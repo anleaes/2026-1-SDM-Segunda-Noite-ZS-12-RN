@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { DrawerScreenProps } from "@react-navigation/drawer";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useState } from "react";
@@ -6,6 +7,7 @@ import {
     FlatList,
     StyleSheet,
     Text,
+    TouchableOpacity,
     View,
 } from "react-native";
 import { DrawerParamList } from "../navigation/DrawerNavigator";
@@ -47,7 +49,6 @@ const StudentsScreen = ({ navigation }: Props) => {
   const fetchStudentsAndParents = async () => {
     setLoading(true);
     try {
-      // Faz os dois fetches em paralelo
       const [studentsResponse, parentsResponse] = await Promise.all([
         fetch("http://localhost:8000/estudante/"),
         fetch("http://localhost:8000/responsavel/"),
@@ -56,7 +57,6 @@ const StudentsScreen = ({ navigation }: Props) => {
       const studentsData: Student[] = await studentsResponse.json();
       const parentsData: ParentBasic[] = await parentsResponse.json();
 
-      // Cria dicionário { 21: "Ana Silva", 22: "Pedro Souza" }
       const namesMap: Record<number, string> = {};
       parentsData.forEach((p) => {
         namesMap[p.id] = p.name;
@@ -111,6 +111,12 @@ const StudentsScreen = ({ navigation }: Props) => {
           contentContainerStyle={{ paddingBottom: 20 }}
         />
       )}
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => navigation.navigate("CreateStudent")}
+      >
+        <Ionicons name="add" size={28} color="#fff" />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -149,6 +155,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#666",
     marginTop: 4,
+  },
+  fab: {
+    position: "absolute",
+    right: 20,
+    bottom: 20,
+    backgroundColor: "#0D47A1",
+    borderRadius: 28,
+    padding: 14,
+    elevation: 4,
   },
 });
 
