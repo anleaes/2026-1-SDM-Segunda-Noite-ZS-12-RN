@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import CustomDrawerContent from "../components/CustomDrawerContent";
 import ClassesScreen from "../screens/ClassesScreen";
+import CreateClassScreen from "../screens/CreateClassScreen";
 import CreateDisciplineScreen from "../screens/CreateDisciplineScreen";
 import CreateTeacherScreen from "../screens/CreateTeacherScreen";
 import DisciplinesScreen, { Discipline } from "../screens/DisciplinesScreen";
@@ -19,6 +20,7 @@ export type DrawerParamList = {
   CreateTeacher: undefined;
   EditTeacher: { teacher: Teacher };
   Classes: undefined;
+  CreateClass: undefined;
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -106,6 +108,14 @@ const DrawerNavigator = () => {
             <Ionicons name="school-outline" size={size} color={color} />
           ),
           title: "Turmas",
+        }}
+      />
+      <Drawer.Screen
+        name="CreateClass"
+        component={CreateClassScreen}
+        options={{
+          drawerItemStyle: { display: "none" },
+          title: "Nova turma",
         }}
       />
     </Drawer.Navigator>

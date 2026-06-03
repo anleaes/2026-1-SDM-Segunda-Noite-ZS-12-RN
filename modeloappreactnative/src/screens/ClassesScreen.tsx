@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { DrawerScreenProps } from "@react-navigation/drawer";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useState } from "react";
@@ -6,6 +7,7 @@ import {
     FlatList,
     StyleSheet,
     Text,
+    TouchableOpacity,
     View,
 } from "react-native";
 import { DrawerParamList } from "../navigation/DrawerNavigator";
@@ -39,7 +41,6 @@ const ClassesScreen = ({ navigation }: Props) => {
   const fetchClassesAndTeachers = async () => {
     setLoading(true);
     try {
-      // Faz os dois fetches em paralelo
       const [classesResponse, teachersResponse] = await Promise.all([
         fetch("http://localhost:8000/turma/"),
         fetch("http://localhost:8000/professor/"),
@@ -48,7 +49,6 @@ const ClassesScreen = ({ navigation }: Props) => {
       const classesData: Class[] = await classesResponse.json();
       const teachersData: TeacherBasic[] = await teachersResponse.json();
 
-      // Cria o dicionário { 1: "Joao Silva", 2: "Maria Santos" }
       const namesMap: Record<number, string> = {};
       teachersData.forEach((t) => {
         namesMap[t.id] = t.name;
@@ -92,6 +92,12 @@ const ClassesScreen = ({ navigation }: Props) => {
           contentContainerStyle={{ paddingBottom: 20 }}
         />
       )}
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => navigation.navigate("CreateClass")}
+      >
+        <Ionicons name="add" size={28} color="#fff" />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -130,6 +136,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#666",
     marginTop: 4,
+  },
+  fab: {
+    position: "absolute",
+    right: 20,
+    bottom: 20,
+    backgroundColor: "#0D47A1",
+    borderRadius: 28,
+    padding: 14,
+    elevation: 4,
   },
 });
 
