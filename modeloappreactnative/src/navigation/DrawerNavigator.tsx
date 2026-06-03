@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import CustomDrawerContent from "../components/CustomDrawerContent";
+import ClassesScreen from "../screens/ClassesScreen";
 import CreateDisciplineScreen from "../screens/CreateDisciplineScreen";
 import CreateTeacherScreen from "../screens/CreateTeacherScreen";
 import DisciplinesScreen, { Discipline } from "../screens/DisciplinesScreen";
@@ -17,6 +18,7 @@ export type DrawerParamList = {
   Teachers: undefined;
   CreateTeacher: undefined;
   EditTeacher: { teacher: Teacher };
+  Classes: undefined;
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -94,6 +96,16 @@ const DrawerNavigator = () => {
         options={{
           drawerItemStyle: { display: "none" },
           title: "Editar professor",
+        }}
+      />
+      <Drawer.Screen
+        name="Classes"
+        component={ClassesScreen}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="school-outline" size={size} color={color} />
+          ),
+          title: "Turmas",
         }}
       />
     </Drawer.Navigator>
