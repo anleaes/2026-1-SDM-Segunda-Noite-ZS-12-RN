@@ -76,6 +76,17 @@ const StudentsScreen = ({ navigation }: Props) => {
     }, []),
   );
 
+  const handleDelete = async (id: number) => {
+    try {
+      await fetch(`http://localhost:8000/estudante/${id}/`, {
+        method: "DELETE",
+      });
+      setStudents((prev) => prev.filter((s) => s.id !== id));
+    } catch (error) {
+      console.error("Erro ao excluir aluno:", error);
+    }
+  };
+
   const renderItem = ({ item }: { item: Student }) => {
     const responsaveisNomes = item.responsaveis
       .map((id) => parentNames[id] || "Desconhecido")
@@ -102,6 +113,12 @@ const StudentsScreen = ({ navigation }: Props) => {
             }
           >
             <Text style={styles.buttonText}>Editar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={() => handleDelete(item.id)}
+          >
+            <Text style={styles.buttonText}>Excluir</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -176,6 +193,11 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 6,
     marginRight: 8,
+  },
+  deleteButton: {
+    backgroundColor: "#E54848",
+    padding: 8,
+    borderRadius: 6,
   },
   buttonText: {
     color: "#fff",
