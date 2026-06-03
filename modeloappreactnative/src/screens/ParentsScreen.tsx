@@ -1,5 +1,6 @@
 import { DrawerScreenProps } from "@react-navigation/drawer";
-import { useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback, useState } from "react";
 import {
     ActivityIndicator,
     FlatList,
@@ -30,7 +31,25 @@ const PARENTESCO_LABELS: Record<Parent["parentesco"], string> = {
 
 const ParentsScreen = ({ navigation }: Props) => {
   const [parents, setParents] = useState<Parent[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const fetchParents = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("http://localhost:8000/responsavel/");
+      const data = await response.json();
+      setParents(data);
+    } catch (error) {
+      console.error("Erro ao buscar responsáveis:", error);
+    }
+    setLoading(false);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchParents();
+    }, []),
+  );
 
   const renderItem = ({ item }: { item: Parent }) => (
     <View style={styles.card}>
