@@ -4,6 +4,7 @@ import CustomDrawerContent from "../components/CustomDrawerContent";
 import ClassesScreen, { Class } from "../screens/ClassesScreen";
 import CreateClassScreen from "../screens/CreateClassScreen";
 import CreateDisciplineScreen from "../screens/CreateDisciplineScreen";
+import CreateParentScreen from "../screens/CreateParentScreen";
 import CreateTeacherScreen from "../screens/CreateTeacherScreen";
 import DisciplinesScreen, { Discipline } from "../screens/DisciplinesScreen";
 import EditClassScreen from "../screens/EditClassScreen";
@@ -25,6 +26,7 @@ export type DrawerParamList = {
   CreateClass: undefined;
   EditClass: { schoolClass: Class };
   Parents: undefined;
+  CreateParent: undefined;
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -135,6 +137,14 @@ const DrawerNavigator = () => {
             <Ionicons name="heart-outline" size={size} color={color} />
           ),
           title: "Responsáveis",
+        }}
+      />
+      <Drawer.Screen
+        name="CreateParent"
+        component={CreateParentScreen}
+        options={{
+          drawerItemStyle: { display: "none" },
+          title: "Novo responsável",
         }}
       />
     </Drawer.Navigator>

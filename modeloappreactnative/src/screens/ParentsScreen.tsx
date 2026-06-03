@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { DrawerScreenProps } from "@react-navigation/drawer";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useState } from "react";
@@ -6,6 +7,7 @@ import {
     FlatList,
     StyleSheet,
     Text,
+    TouchableOpacity,
     View,
 } from "react-native";
 import { DrawerParamList } from "../navigation/DrawerNavigator";
@@ -78,6 +80,12 @@ const ParentsScreen = ({ navigation }: Props) => {
           contentContainerStyle={{ paddingBottom: 20 }}
         />
       )}
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => navigation.navigate("CreateParent")}
+      >
+        <Ionicons name="add" size={28} color="#fff" />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -116,6 +124,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#666",
     marginTop: 4,
+  },
+  fab: {
+    position: "absolute",
+    right: 20,
+    bottom: 20,
+    backgroundColor: "#0D47A1",
+    borderRadius: 28,
+    padding: 14,
+    elevation: 4,
   },
 });
 
