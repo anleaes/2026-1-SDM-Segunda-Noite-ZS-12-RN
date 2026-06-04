@@ -7,6 +7,7 @@ import EditRegistrationCartScreen from "../screens/EditRegistrationCartScreen";
 import CreateRegistrationCartScreen from "../screens/CreateRegistrationCartScreen";
 import ClassesScreen, { Class } from "../screens/ClassesScreen";
 import ClassroomsScreen, { Classroom } from "../screens/ClassroomsScreen";
+import GradesScreen, { Grade } from "../screens/GradesScreen";
 import CreateClassScreen from "../screens/CreateClassScreen";
 import CreateClassroomScreen from "../screens/CreateClassroomScreen";
 import CreateDisciplineScreen from "../screens/CreateDisciplineScreen";
@@ -57,6 +58,9 @@ export type DrawerParamList = {
   RegistrationCarts: undefined;
   CreateRegistrationCart: undefined;
   EditRegistrationCart: { cart: RegistrationCart };
+  Grades: undefined;
+  CreateGrade: undefined;
+  EditGrade: { grade: Grade };
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -288,6 +292,32 @@ const DrawerNavigator = () => {
         options={{
           drawerItemStyle: { display: "none" },
           title: "Editar carrinho",
+        }}
+      />
+      <Drawer.Screen
+        name="Grades"
+        component={GradesScreen}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="star-outline" size={size} color={color} />
+          ),
+          title: "Notas",
+        }}
+      />
+      <Drawer.Screen
+        name="CreateGrade"
+        component={GradesScreen}
+        options={{
+          drawerItemStyle: { display: "none" },
+          title: "Nova nota",
+        }}
+      />
+      <Drawer.Screen
+        name="EditGrade"
+        component={GradesScreen}
+        options={{
+          drawerItemStyle: { display: "none" },
+          title: "Editar nota",
         }}
       />
     </Drawer.Navigator>
