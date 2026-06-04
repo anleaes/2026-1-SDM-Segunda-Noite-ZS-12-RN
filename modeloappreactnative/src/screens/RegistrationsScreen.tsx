@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { DrawerScreenProps } from "@react-navigation/drawer";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useState } from "react";
@@ -6,6 +7,7 @@ import {
     FlatList,
     StyleSheet,
     Text,
+    TouchableOpacity,
     View,
 } from "react-native";
 import { DrawerParamList } from "../navigation/DrawerNavigator";
@@ -44,7 +46,6 @@ const RegistrationsScreen = ({ navigation }: Props) => {
   const fetchAll = async () => {
     setLoading(true);
     try {
-      // 3 fetches em paralelo
       const [registrationsResponse, studentsResponse, classesResponse] =
         await Promise.all([
           fetch("http://localhost:8000/matricula/"),
@@ -57,13 +58,11 @@ const RegistrationsScreen = ({ navigation }: Props) => {
       const studentsData: StudentBasic[] = await studentsResponse.json();
       const classesData: ClassBasic[] = await classesResponse.json();
 
-      // Dicionário { id: nome } dos alunos
       const studentMap: Record<number, string> = {};
       studentsData.forEach((s) => {
         studentMap[s.id] = s.name;
       });
 
-      // Dicionário { id: codigo } das turmas
       const classMap: Record<number, string> = {};
       classesData.forEach((c) => {
         classMap[c.id] = c.codigo;
@@ -111,6 +110,12 @@ const RegistrationsScreen = ({ navigation }: Props) => {
           contentContainerStyle={{ paddingBottom: 20 }}
         />
       )}
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => navigation.navigate("CreateRegistration")}
+      >
+        <Ionicons name="add" size={28} color="#fff" />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -149,6 +154,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#666",
     marginTop: 4,
+  },
+  fab: {
+    position: "absolute",
+    right: 20,
+    bottom: 20,
+    backgroundColor: "#0D47A1",
+    borderRadius: 28,
+    padding: 14,
+    elevation: 4,
   },
 });
 
