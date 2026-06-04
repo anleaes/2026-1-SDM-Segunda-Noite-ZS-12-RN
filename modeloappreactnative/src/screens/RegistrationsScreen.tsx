@@ -1,5 +1,6 @@
 import { DrawerScreenProps } from "@react-navigation/drawer";
-import { useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback, useState } from "react";
 import {
     ActivityIndicator,
     FlatList,
@@ -15,8 +16,18 @@ export type Registration = {
   id: number;
   data_matricula: string;
   situacao: string;
-  student: number; // ID do aluno
-  school_class: number; // ID da turma
+  student: number;
+  school_class: number;
+};
+
+type StudentBasic = {
+  id: number;
+  name: string;
+};
+
+type ClassBasic = {
+  id: number;
+  codigo: string;
 };
 
 const formatDate = (isoDate: string) => {
@@ -28,16 +39,59 @@ const RegistrationsScreen = ({ navigation }: Props) => {
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [studentNames, setStudentNames] = useState<Record<number, string>>({});
   const [classNames, setClassNames] = useState<Record<number, string>>({});
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const fetchAll = async () => {
+    setLoading(true);
+    try {
+      // 3 fetches em paralelo
+      const [registrationsResponse, studentsResponse, classesResponse] =
+        await Promise.all([
+          fetch("http://localhost:8000/matricula/"),
+          fetch("http://localhost:8000/estudante/"),
+          fetch("http://localhost:8000/turma/"),
+        ]);
+
+      const registrationsData: Registration[] =
+        await registrationsResponse.json();
+      const studentsData: StudentBasic[] = await studentsResponse.json();
+      const classesData: ClassBasic[] = await classesResponse.json();
+
+      // Dicionário { id: nome } dos alunos
+      const studentMap: Record<number, string> = {};
+      studentsData.forEach((s) => {
+        studentMap[s.id] = s.name;
+      });
+
+      // Dicionário { id: codigo } das turmas
+      const classMap: Record<number, string> = {};
+      classesData.forEach((c) => {
+        classMap[c.id] = c.codigo;
+      });
+
+      setRegistrations(registrationsData);
+      setStudentNames(studentMap);
+      setClassNames(classMap);
+    } catch (error) {
+      console.error("Erro ao buscar matriculas, alunos e turmas:", error);
+    }
+    setLoading(false);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchAll();
+    }, []),
+  );
 
   const renderItem = ({ item }: { item: Registration }) => (
     <View style={styles.card}>
       <Text style={styles.name}>Matrícula #{item.id}</Text>
       <Text style={styles.info}>
-        Aluno: {studentNames[item.student] || "Carregando..."}
+        Aluno: {studentNames[item.student] || "Desconhecido"}
       </Text>
       <Text style={styles.info}>
-        Turma: {classNames[item.school_class] || "Carregando..."}
+        Turma: {classNames[item.school_class] || "Desconhecida"}
       </Text>
       <Text style={styles.info}>Data: {formatDate(item.data_matricula)}</Text>
       <Text style={styles.info}>Situação: {item.situacao}</Text>
