@@ -4,6 +4,7 @@ import CustomDrawerContent from "../components/CustomDrawerContent";
 import BulletinsScreen from "../screens/BulletinsScreen";
 import ClassesScreen, { Class } from "../screens/ClassesScreen";
 import ClassroomsScreen, { Classroom } from "../screens/ClassroomsScreen";
+import CreateBulletinScreen from "../screens/CreateBulletinScreen";
 import CreateClassScreen from "../screens/CreateClassScreen";
 import CreateClassroomScreen from "../screens/CreateClassroomScreen";
 import CreateDisciplineScreen from "../screens/CreateDisciplineScreen";
@@ -51,6 +52,7 @@ export type DrawerParamList = {
   CreateRegistration: undefined;
   EditRegistration: { registration: Registration };
   Bulletins: undefined;
+  CreateBulletin: undefined;
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -256,6 +258,14 @@ const DrawerNavigator = () => {
             <Ionicons name="clipboard-outline" size={size} color={color} />
           ),
           title: "Boletins",
+        }}
+      />
+      <Drawer.Screen
+        name="CreateBulletin"
+        component={CreateBulletinScreen}
+        options={{
+          drawerItemStyle: { display: "none" },
+          title: "Novo boletim",
         }}
       />
     </Drawer.Navigator>
