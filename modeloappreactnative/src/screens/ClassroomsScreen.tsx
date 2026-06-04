@@ -1,5 +1,6 @@
 import { DrawerScreenProps } from "@react-navigation/drawer";
-import { useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback, useState } from "react";
 import {
     ActivityIndicator,
     FlatList,
@@ -16,8 +17,18 @@ export type Classroom = {
   data: string;
   sala: string;
   conteudo: string;
-  school_class: number; // ID da turma
-  discipline: number; // ID da disciplina
+  school_class: number;
+  discipline: number;
+};
+
+type ClassBasic = {
+  id: number;
+  codigo: string;
+};
+
+type DisciplineBasic = {
+  id: number;
+  name: string;
 };
 
 const formatDate = (isoDate: string) => {
@@ -31,17 +42,60 @@ const ClassroomsScreen = ({ navigation }: Props) => {
   const [disciplineNames, setDisciplineNames] = useState<
     Record<number, string>
   >({});
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const fetchAll = async () => {
+    setLoading(true);
+    try {
+      // 3 fetches em paralelo
+      const [classroomsResponse, classesResponse, disciplinesResponse] =
+        await Promise.all([
+          fetch("http://localhost:8000/aula/"),
+          fetch("http://localhost:8000/turma/"),
+          fetch("http://localhost:8000/disciplina/"),
+        ]);
+
+      const classroomsData: Classroom[] = await classroomsResponse.json();
+      const classesData: ClassBasic[] = await classesResponse.json();
+      const disciplinesData: DisciplineBasic[] =
+        await disciplinesResponse.json();
+
+      // Dicionário { id: codigo } das turmas
+      const classMap: Record<number, string> = {};
+      classesData.forEach((c) => {
+        classMap[c.id] = c.codigo;
+      });
+
+      // Dicionário { id: nome } das disciplinas
+      const disciplineMap: Record<number, string> = {};
+      disciplinesData.forEach((d) => {
+        disciplineMap[d.id] = d.name;
+      });
+
+      setClassrooms(classroomsData);
+      setClassNames(classMap);
+      setDisciplineNames(disciplineMap);
+    } catch (error) {
+      console.error("Erro ao buscar aulas, turmas e disciplinas:", error);
+    }
+    setLoading(false);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchAll();
+    }, []),
+  );
 
   const renderItem = ({ item }: { item: Classroom }) => (
     <View style={styles.card}>
       <Text style={styles.name}>Sala: {item.sala}</Text>
       <Text style={styles.info}>Data: {formatDate(item.data)}</Text>
       <Text style={styles.info}>
-        Turma: {classNames[item.school_class] || "Carregando..."}
+        Turma: {classNames[item.school_class] || "Desconhecida"}
       </Text>
       <Text style={styles.info}>
-        Disciplina: {disciplineNames[item.discipline] || "Carregando..."}
+        Disciplina: {disciplineNames[item.discipline] || "Desconhecida"}
       </Text>
       <Text style={styles.info}>Conteúdo: {item.conteudo}</Text>
     </View>
