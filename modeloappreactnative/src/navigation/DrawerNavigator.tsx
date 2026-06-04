@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import CustomDrawerContent from "../components/CustomDrawerContent";
-import BulletinsScreen from "../screens/BulletinsScreen";
+import BulletinsScreen, { Bulletin } from "../screens/BulletinsScreen";
 import ClassesScreen, { Class } from "../screens/ClassesScreen";
 import ClassroomsScreen, { Classroom } from "../screens/ClassroomsScreen";
 import CreateBulletinScreen from "../screens/CreateBulletinScreen";
@@ -13,6 +13,7 @@ import CreateRegistrationScreen from "../screens/CreateRegistrationScreen";
 import CreateStudentScreen from "../screens/CreateStudentScreen";
 import CreateTeacherScreen from "../screens/CreateTeacherScreen";
 import DisciplinesScreen, { Discipline } from "../screens/DisciplinesScreen";
+import EditBulletinScreen from "../screens/EditBulletinScreen";
 import EditClassScreen from "../screens/EditClassScreen";
 import EditClassroomScreen from "../screens/EditClassroomScreen";
 import EditDisciplineScreen from "../screens/EditDisciplineScreen";
@@ -53,6 +54,7 @@ export type DrawerParamList = {
   EditRegistration: { registration: Registration };
   Bulletins: undefined;
   CreateBulletin: undefined;
+  EditBulletin: { bulletin: Bulletin };
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -266,6 +268,14 @@ const DrawerNavigator = () => {
         options={{
           drawerItemStyle: { display: "none" },
           title: "Novo boletim",
+        }}
+      />
+      <Drawer.Screen
+        name="EditBulletin"
+        component={EditBulletinScreen}
+        options={{
+          drawerItemStyle: { display: "none" },
+          title: "Editar boletim",
         }}
       />
     </Drawer.Navigator>
