@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import CustomDrawerContent from "../components/CustomDrawerContent";
+import BulletinsScreen from "../screens/BulletinsScreen";
 import ClassesScreen, { Class } from "../screens/ClassesScreen";
 import ClassroomsScreen, { Classroom } from "../screens/ClassroomsScreen";
 import CreateClassScreen from "../screens/CreateClassScreen";
@@ -49,6 +50,7 @@ export type DrawerParamList = {
   Registrations: undefined;
   CreateRegistration: undefined;
   EditRegistration: { registration: Registration };
+  Bulletins: undefined;
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -244,6 +246,16 @@ const DrawerNavigator = () => {
         options={{
           drawerItemStyle: { display: "none" },
           title: "Editar matrícula",
+        }}
+      />
+      <Drawer.Screen
+        name="Bulletins"
+        component={BulletinsScreen}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="clipboard-outline" size={size} color={color} />
+          ),
+          title: "Boletins",
         }}
       />
     </Drawer.Navigator>
