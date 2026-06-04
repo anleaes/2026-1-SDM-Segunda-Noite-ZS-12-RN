@@ -4,7 +4,9 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useState } from "react";
 import {
     ActivityIndicator,
+    Alert,
     FlatList,
+    Platform,
     StyleSheet,
     Text,
     TouchableOpacity,
@@ -84,7 +86,6 @@ const RegistrationCartScreen = ({ navigation }: Props) => {
         teacherMap[t.id] = t.name;
       });
 
-      // Agrupa por matrícula + professor + status
       const groupMap: Record<string, GroupedCart> = {};
       cartsData.forEach((cart) => {
         const key = `${cart.registration}-${cart.teacher}-${cart.status}`;
@@ -119,6 +120,44 @@ const RegistrationCartScreen = ({ navigation }: Props) => {
     }, []),
   );
 
+  const deleteCart = async (ids: number[]) => {
+    try {
+      await Promise.all(
+        ids.map((id) =>
+          fetch(`http://localhost:8000/carrinhomatricula/${id}/`, {
+            method: "DELETE",
+          })
+        )
+      );
+      setGroupedCarts((prev) =>
+        prev.filter((g) => g.ids.join() !== ids.join())
+      );
+    } catch (error) {
+      console.error("Erro ao excluir carrinho:", error);
+    }
+  };
+
+  const confirmDelete = (item: GroupedCart) => {
+    const registrationLabel =
+      registrationNames[item.registration] || `Matrícula #${item.registration}`;
+    const message = `Tem certeza que deseja excluir o carrinho de ${registrationLabel}?`;
+
+    if (Platform.OS === "web") {
+      if (window.confirm(message)) {
+        deleteCart(item.ids);
+      }
+    } else {
+      Alert.alert("Confirmar exclusão", message, [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Excluir",
+          style: "destructive",
+          onPress: () => deleteCart(item.ids),
+        },
+      ]);
+    }
+  };
+
   const renderItem = ({ item }: { item: GroupedCart }) => (
     <View style={styles.card}>
       <Text style={styles.name}>
@@ -151,7 +190,10 @@ const RegistrationCartScreen = ({ navigation }: Props) => {
         >
           <Text style={styles.buttonText}>Editar</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.deleteButton}>
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={() => confirmDelete(item)}
+        >
           <Text style={styles.buttonText}>Excluir</Text>
         </TouchableOpacity>
       </View>
