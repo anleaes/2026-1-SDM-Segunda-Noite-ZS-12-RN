@@ -4,7 +4,9 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useState } from "react";
 import {
     ActivityIndicator,
+    Alert,
     FlatList,
+    Platform,
     StyleSheet,
     Text,
     TouchableOpacity,
@@ -83,6 +85,37 @@ const RegistrationsScreen = ({ navigation }: Props) => {
     }, []),
   );
 
+  const deleteRegistration = async (id: number) => {
+    try {
+      await fetch(`http://localhost:8000/matricula/${id}/`, {
+        method: "DELETE",
+      });
+      setRegistrations((prev) => prev.filter((r) => r.id !== id));
+    } catch (error) {
+      console.error("Erro ao excluir matricula:", error);
+    }
+  };
+
+  const confirmDelete = (item: Registration) => {
+    const studentName = studentNames[item.student] || "Aluno desconhecido";
+    const message = `Tem certeza que deseja excluir a matrícula #${item.id} de ${studentName}?`;
+
+    if (Platform.OS === "web") {
+      if (window.confirm(message)) {
+        deleteRegistration(item.id);
+      }
+    } else {
+      Alert.alert("Confirmar exclusão", message, [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Excluir",
+          style: "destructive",
+          onPress: () => deleteRegistration(item.id),
+        },
+      ]);
+    }
+  };
+
   const renderItem = ({ item }: { item: Registration }) => (
     <View style={styles.card}>
       <Text style={styles.name}>Matrícula #{item.id}</Text>
@@ -102,6 +135,12 @@ const RegistrationsScreen = ({ navigation }: Props) => {
           }
         >
           <Text style={styles.buttonText}>Editar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={() => confirmDelete(item)}
+        >
+          <Text style={styles.buttonText}>Excluir</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -175,6 +214,11 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 6,
     marginRight: 8,
+  },
+  deleteButton: {
+    backgroundColor: "#E54848",
+    padding: 8,
+    borderRadius: 6,
   },
   buttonText: {
     color: "#fff",
