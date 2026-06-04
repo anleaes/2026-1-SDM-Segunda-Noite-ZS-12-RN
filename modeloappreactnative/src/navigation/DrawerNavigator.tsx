@@ -4,6 +4,7 @@ import CustomDrawerContent from "../components/CustomDrawerContent";
 import BulletinsScreen from "../screens/BulletinsScreen";
 import RegistrationCartScreen from "../screens/RegistrationCartScreen";
 import RegistrationCartScreen, { RegistrationCart } from "../screens/RegistrationCartScreen";
+import CreateRegistrationCartScreen from "../screens/CreateRegistrationCartScreen";
 import ClassesScreen, { Class } from "../screens/ClassesScreen";
 import ClassroomsScreen, { Classroom } from "../screens/ClassroomsScreen";
 import CreateClassScreen from "../screens/CreateClassScreen";
@@ -275,7 +276,7 @@ const DrawerNavigator = () => {
       />
       <Drawer.Screen
         name="CreateRegistrationCart"
-        component={RegistrationCartScreen}
+        component={CreateRegistrationCartScreen}
         options={{
           drawerItemStyle: { display: "none" },
           title: "Novo carrinho",
