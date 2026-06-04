@@ -1,6 +1,18 @@
 import { Ionicons } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import CustomDrawerContent from "../components/CustomDrawerContent";
+import BulletinsScreen from "../screens/BulletinsScreen";
+import RegistrationCartScreen, { RegistrationCart } from "../screens/RegistrationCartScreen";
+import EditRegistrationCartScreen from "../screens/EditRegistrationCartScreen";
+import CreateRegistrationCartScreen from "../screens/CreateRegistrationCartScreen";
+import ClassesScreen, { Class } from "../screens/ClassesScreen";
+import ClassroomsScreen, { Classroom } from "../screens/ClassroomsScreen";
+import GradesScreen, { Grade } from "../screens/GradesScreen";
+import BulletinItemsScreen, { BulletinItem } from "../screens/BulletinItemsScreen";
+import EditBulletinItemScreen from "../screens/EditBulletinItemScreen";
+import CreateGradeScreen from "../screens/CreateGradeScreen";
+import CreateBulletinItemScreen from "../screens/CreateBulletinItemScreen";
+import EditGradeScreen from "../screens/EditGradeScreen";
 import BulletinsScreen, { Bulletin } from "../screens/BulletinsScreen";
 import ClassesScreen, { Class } from "../screens/ClassesScreen";
 import ClassroomsScreen, { Classroom } from "../screens/ClassroomsScreen";
@@ -53,6 +65,15 @@ export type DrawerParamList = {
   CreateRegistration: undefined;
   EditRegistration: { registration: Registration };
   Bulletins: undefined;
+  RegistrationCarts: undefined;
+  CreateRegistrationCart: undefined;
+  EditRegistrationCart: { cart: RegistrationCart };
+  Grades: undefined;
+  CreateGrade: undefined;
+  EditGrade: { grade: Grade };
+  BulletinItems: undefined;
+  CreateBulletinItem: undefined;
+  EditBulletinItem: { item: BulletinItem };
   CreateBulletin: undefined;
   EditBulletin: { bulletin: Bulletin };
 };
@@ -263,6 +284,81 @@ const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
+        name="RegistrationCarts"
+        component={RegistrationCartScreen}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="cart-outline" size={size} color={color} />
+          ),
+          title: "Carrinho de Matrícula",
+        }}
+      />
+      <Drawer.Screen
+        name="CreateRegistrationCart"
+        component={CreateRegistrationCartScreen}
+        options={{
+          drawerItemStyle: { display: "none" },
+          title: "Novo carrinho",
+        }}
+      />
+      <Drawer.Screen
+        name="EditRegistrationCart"
+        component={EditRegistrationCartScreen}
+        options={{
+          drawerItemStyle: { display: "none" },
+          title: "Editar carrinho",
+        }}
+      />
+      <Drawer.Screen
+        name="Grades"
+        component={GradesScreen}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="star-outline" size={size} color={color} />
+          ),
+          title: "Notas",
+        }}
+      />
+      <Drawer.Screen
+        name="CreateGrade"
+        component={CreateGradeScreen}
+        options={{
+          drawerItemStyle: { display: "none" },
+          title: "Nova nota",
+        }}
+      />
+      <Drawer.Screen
+        name="EditGrade"
+        component={EditGradeScreen}
+        options={{
+          drawerItemStyle: { display: "none" },
+          title: "Editar nota",
+        }}
+      />
+      <Drawer.Screen
+        name="BulletinItems"
+        component={BulletinItemsScreen}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="list-outline" size={size} color={color} />
+          ),
+          title: "Itens de Boletim",
+        }}
+      />
+      <Drawer.Screen
+        name="CreateBulletinItem"
+        component={CreateBulletinItemScreen}
+        options={{
+          drawerItemStyle: { display: "none" },
+          title: "Novo item",
+        }}
+      />
+      <Drawer.Screen
+        name="EditBulletinItem"
+        component={EditBulletinItemScreen}
+        options={{
+          drawerItemStyle: { display: "none" },
+          title: "Editar item",
         name="CreateBulletin"
         component={CreateBulletinScreen}
         options={{
