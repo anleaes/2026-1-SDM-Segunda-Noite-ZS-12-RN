@@ -8,6 +8,7 @@ import CreateRegistrationCartScreen from "../screens/CreateRegistrationCartScree
 import ClassesScreen, { Class } from "../screens/ClassesScreen";
 import ClassroomsScreen, { Classroom } from "../screens/ClassroomsScreen";
 import GradesScreen, { Grade } from "../screens/GradesScreen";
+import CreateGradeScreen from "../screens/CreateGradeScreen";
 import CreateClassScreen from "../screens/CreateClassScreen";
 import CreateClassroomScreen from "../screens/CreateClassroomScreen";
 import CreateDisciplineScreen from "../screens/CreateDisciplineScreen";
@@ -306,7 +307,7 @@ const DrawerNavigator = () => {
       />
       <Drawer.Screen
         name="CreateGrade"
-        component={GradesScreen}
+        component={CreateGradeScreen}
         options={{
           drawerItemStyle: { display: "none" },
           title: "Nova nota",
