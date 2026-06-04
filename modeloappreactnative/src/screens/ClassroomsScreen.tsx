@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { DrawerScreenProps } from "@react-navigation/drawer";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useState } from "react";
@@ -6,6 +7,7 @@ import {
     FlatList,
     StyleSheet,
     Text,
+    TouchableOpacity,
     View,
 } from "react-native";
 import { DrawerParamList } from "../navigation/DrawerNavigator";
@@ -47,7 +49,6 @@ const ClassroomsScreen = ({ navigation }: Props) => {
   const fetchAll = async () => {
     setLoading(true);
     try {
-      // 3 fetches em paralelo
       const [classroomsResponse, classesResponse, disciplinesResponse] =
         await Promise.all([
           fetch("http://localhost:8000/aula/"),
@@ -60,13 +61,11 @@ const ClassroomsScreen = ({ navigation }: Props) => {
       const disciplinesData: DisciplineBasic[] =
         await disciplinesResponse.json();
 
-      // Dicionário { id: codigo } das turmas
       const classMap: Record<number, string> = {};
       classesData.forEach((c) => {
         classMap[c.id] = c.codigo;
       });
 
-      // Dicionário { id: nome } das disciplinas
       const disciplineMap: Record<number, string> = {};
       disciplinesData.forEach((d) => {
         disciplineMap[d.id] = d.name;
@@ -114,6 +113,12 @@ const ClassroomsScreen = ({ navigation }: Props) => {
           contentContainerStyle={{ paddingBottom: 20 }}
         />
       )}
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => navigation.navigate("CreateClassroom")}
+      >
+        <Ionicons name="add" size={28} color="#fff" />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -152,6 +157,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#666",
     marginTop: 4,
+  },
+  fab: {
+    position: "absolute",
+    right: 20,
+    bottom: 20,
+    backgroundColor: "#0D47A1",
+    borderRadius: 28,
+    padding: 14,
+    elevation: 4,
   },
 });
 

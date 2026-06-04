@@ -4,6 +4,7 @@ import CustomDrawerContent from "../components/CustomDrawerContent";
 import ClassesScreen, { Class } from "../screens/ClassesScreen";
 import ClassroomsScreen from "../screens/ClassroomsScreen";
 import CreateClassScreen from "../screens/CreateClassScreen";
+import CreateClassroomScreen from "../screens/CreateClassroomScreen";
 import CreateDisciplineScreen from "../screens/CreateDisciplineScreen";
 import CreateParentScreen from "../screens/CreateParentScreen";
 import CreateStudentScreen from "../screens/CreateStudentScreen";
@@ -37,6 +38,7 @@ export type DrawerParamList = {
   CreateStudent: undefined;
   EditStudent: { student: Student };
   Classrooms: undefined;
+  CreateClassroom: undefined;
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -197,6 +199,11 @@ const DrawerNavigator = () => {
           ),
           title: "Aulas",
         }}
+      />
+      <Drawer.Screen
+        name="CreateClassroom"
+        component={CreateClassroomScreen}
+        options={{ drawerItemStyle: { display: "none" }, title: "Nova aula" }}
       />
     </Drawer.Navigator>
   );
