@@ -8,6 +8,7 @@ import CreateRegistrationCartScreen from "../screens/CreateRegistrationCartScree
 import ClassesScreen, { Class } from "../screens/ClassesScreen";
 import ClassroomsScreen, { Classroom } from "../screens/ClassroomsScreen";
 import GradesScreen, { Grade } from "../screens/GradesScreen";
+import BulletinItemsScreen, { BulletinItem } from "../screens/BulletinItemsScreen";
 import CreateGradeScreen from "../screens/CreateGradeScreen";
 import EditGradeScreen from "../screens/EditGradeScreen";
 import CreateClassScreen from "../screens/CreateClassScreen";
@@ -63,6 +64,9 @@ export type DrawerParamList = {
   Grades: undefined;
   CreateGrade: undefined;
   EditGrade: { grade: Grade };
+  BulletinItems: undefined;
+  CreateBulletinItem: undefined;
+  EditBulletinItem: { item: BulletinItem };
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -320,6 +324,32 @@ const DrawerNavigator = () => {
         options={{
           drawerItemStyle: { display: "none" },
           title: "Editar nota",
+        }}
+      />
+      <Drawer.Screen
+        name="BulletinItems"
+        component={BulletinItemsScreen}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="list-outline" size={size} color={color} />
+          ),
+          title: "Itens de Boletim",
+        }}
+      />
+      <Drawer.Screen
+        name="CreateBulletinItem"
+        component={BulletinItemsScreen}
+        options={{
+          drawerItemStyle: { display: "none" },
+          title: "Novo item",
+        }}
+      />
+      <Drawer.Screen
+        name="EditBulletinItem"
+        component={BulletinItemsScreen}
+        options={{
+          drawerItemStyle: { display: "none" },
+          title: "Editar item",
         }}
       />
     </Drawer.Navigator>
