@@ -2,6 +2,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import CustomDrawerContent from "../components/CustomDrawerContent";
 import BulletinsScreen from "../screens/BulletinsScreen";
+import RegistrationCartScreen from "../screens/RegistrationCartScreen";
+import RegistrationCartScreen, { RegistrationCart } from "../screens/RegistrationCartScreen";
 import ClassesScreen, { Class } from "../screens/ClassesScreen";
 import ClassroomsScreen, { Classroom } from "../screens/ClassroomsScreen";
 import CreateClassScreen from "../screens/CreateClassScreen";
@@ -51,6 +53,9 @@ export type DrawerParamList = {
   CreateRegistration: undefined;
   EditRegistration: { registration: Registration };
   Bulletins: undefined;
+  RegistrationCarts: undefined;
+  CreateRegistrationCart: undefined;
+  EditRegistrationCart: { cart: RegistrationCart };
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -256,6 +261,32 @@ const DrawerNavigator = () => {
             <Ionicons name="clipboard-outline" size={size} color={color} />
           ),
           title: "Boletins",
+        }}
+      />
+      <Drawer.Screen
+        name="RegistrationCarts"
+        component={RegistrationCartScreen}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="cart-outline" size={size} color={color} />
+          ),
+          title: "Carrinho de Matrícula",
+        }}
+      />
+      <Drawer.Screen
+        name="CreateRegistrationCart"
+        component={RegistrationCartScreen}
+        options={{
+          drawerItemStyle: { display: "none" },
+          title: "Novo carrinho",
+        }}
+      />
+      <Drawer.Screen
+        name="EditRegistrationCart"
+        component={RegistrationCartScreen}
+        options={{
+          drawerItemStyle: { display: "none" },
+          title: "Editar carrinho",
         }}
       />
     </Drawer.Navigator>
