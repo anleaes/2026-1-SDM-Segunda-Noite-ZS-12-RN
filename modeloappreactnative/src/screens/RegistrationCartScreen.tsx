@@ -22,6 +22,15 @@ export type RegistrationCart = {
   teacher: number;
 };
 
+type GroupedCart = {
+  key: string;
+  ids: number[];
+  status: string;
+  registration: number;
+  teacher: number;
+  disciplines: number[];
+};
+
 type RegistrationBasic = {
   id: number;
   data_matricula: string;
@@ -38,7 +47,7 @@ type TeacherBasic = {
 };
 
 const RegistrationCartScreen = ({ navigation }: Props) => {
-  const [carts, setCarts] = useState<RegistrationCart[]>([]);
+  const [groupedCarts, setGroupedCarts] = useState<GroupedCart[]>([]);
   const [registrationNames, setRegistrationNames] = useState<Record<number, string>>({});
   const [disciplineNames, setDisciplineNames] = useState<Record<number, string>>({});
   const [teacherNames, setTeacherNames] = useState<Record<number, string>>({});
@@ -75,7 +84,26 @@ const RegistrationCartScreen = ({ navigation }: Props) => {
         teacherMap[t.id] = t.name;
       });
 
-      setCarts(cartsData);
+      // Agrupa por matrícula + professor + status
+      const groupMap: Record<string, GroupedCart> = {};
+      cartsData.forEach((cart) => {
+        const key = `${cart.registration}-${cart.teacher}-${cart.status}`;
+        if (groupMap[key]) {
+          groupMap[key].ids.push(cart.id);
+          groupMap[key].disciplines.push(cart.discipline);
+        } else {
+          groupMap[key] = {
+            key,
+            ids: [cart.id],
+            status: cart.status,
+            registration: cart.registration,
+            teacher: cart.teacher,
+            disciplines: [cart.discipline],
+          };
+        }
+      });
+
+      setGroupedCarts(Object.values(groupMap));
       setRegistrationNames(registrationMap);
       setDisciplineNames(disciplineMap);
       setTeacherNames(teacherMap);
@@ -91,21 +119,36 @@ const RegistrationCartScreen = ({ navigation }: Props) => {
     }, []),
   );
 
-  const renderItem = ({ item }: { item: RegistrationCart }) => (
+  const renderItem = ({ item }: { item: GroupedCart }) => (
     <View style={styles.card}>
-      <Text style={styles.name}>Carrinho #{item.id}</Text>
-      <Text style={styles.info}>
-        Matrícula: {registrationNames[item.registration] || `#${item.registration}`}
+      <Text style={styles.name}>
+        {registrationNames[item.registration] || `Matrícula #${item.registration}`}
       </Text>
       <Text style={styles.info}>
-        Disciplina: {disciplineNames[item.discipline] || "Desconhecida"}
+        Disciplinas:{" "}
+        {item.disciplines
+          .map((dId) => disciplineNames[dId] || `#${dId}`)
+          .join(", ")}
       </Text>
       <Text style={styles.info}>
         Professor: {teacherNames[item.teacher] || "Desconhecido"}
       </Text>
       <Text style={styles.info}>Status: {item.status}</Text>
       <View style={styles.row}>
-        <TouchableOpacity style={styles.editButton}>
+        <TouchableOpacity
+          style={styles.editButton}
+          onPress={() =>
+            navigation.navigate("EditRegistrationCart", {
+              cart: {
+                id: item.ids[0],
+                status: item.status,
+                registration: item.registration,
+                discipline: item.disciplines[0],
+                teacher: item.teacher,
+              },
+            })
+          }
+        >
           <Text style={styles.buttonText}>Editar</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.deleteButton}>
@@ -122,8 +165,8 @@ const RegistrationCartScreen = ({ navigation }: Props) => {
         <ActivityIndicator size="large" color="#4B7BE5" />
       ) : (
         <FlatList
-          data={carts}
-          keyExtractor={(item) => item.id.toString()}
+          data={groupedCarts}
+          keyExtractor={(item) => item.key}
           renderItem={renderItem}
           contentContainerStyle={{ paddingBottom: 80 }}
         />

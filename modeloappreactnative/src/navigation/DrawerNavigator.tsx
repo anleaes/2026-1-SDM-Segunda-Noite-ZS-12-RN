@@ -2,8 +2,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import CustomDrawerContent from "../components/CustomDrawerContent";
 import BulletinsScreen from "../screens/BulletinsScreen";
-import RegistrationCartScreen from "../screens/RegistrationCartScreen";
 import RegistrationCartScreen, { RegistrationCart } from "../screens/RegistrationCartScreen";
+import EditRegistrationCartScreen from "../screens/EditRegistrationCartScreen";
 import CreateRegistrationCartScreen from "../screens/CreateRegistrationCartScreen";
 import ClassesScreen, { Class } from "../screens/ClassesScreen";
 import ClassroomsScreen, { Classroom } from "../screens/ClassroomsScreen";
@@ -284,7 +284,7 @@ const DrawerNavigator = () => {
       />
       <Drawer.Screen
         name="EditRegistrationCart"
-        component={RegistrationCartScreen}
+        component={EditRegistrationCartScreen}
         options={{
           drawerItemStyle: { display: "none" },
           title: "Editar carrinho",

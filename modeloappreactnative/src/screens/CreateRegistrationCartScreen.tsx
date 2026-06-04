@@ -32,7 +32,7 @@ type TeacherBasic = {
 const CreateRegistrationCartScreen = ({ navigation }: Props) => {
   const [status, setStatus] = useState("");
   const [registrationId, setRegistrationId] = useState<number | null>(null);
-  const [disciplineId, setDisciplineId] = useState<number | null>(null);
+  const [disciplineIds, setDisciplineIds] = useState<number[]>([]);
   const [teacherId, setTeacherId] = useState<number | null>(null);
 
   const [registrations, setRegistrations] = useState<RegistrationBasic[]>([]);
@@ -64,7 +64,7 @@ const CreateRegistrationCartScreen = ({ navigation }: Props) => {
   const resetForm = () => {
     setStatus("");
     setRegistrationId(null);
-    setDisciplineId(null);
+    setDisciplineIds([]);
     setTeacherId(null);
   };
 
@@ -75,22 +75,32 @@ const CreateRegistrationCartScreen = ({ navigation }: Props) => {
     }, []),
   );
 
+  const toggleDiscipline = (id: number) => {
+    setDisciplineIds((prev) =>
+      prev.includes(id) ? prev.filter((d) => d !== id) : [...prev, id]
+    );
+  };
+
   const handleSave = async () => {
-    if (!registrationId || !disciplineId || !teacherId) {
+    if (!registrationId || disciplineIds.length === 0 || !teacherId) {
       alert("Preencha todos os campos obrigatórios.");
       return;
     }
     try {
-      await fetch("http://localhost:8000/carrinhomatricula/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          status,
-          registration: registrationId,
-          discipline: disciplineId,
-          teacher: teacherId,
-        }),
-      });
+      await Promise.all(
+        disciplineIds.map((dId) =>
+          fetch("http://localhost:8000/carrinhomatricula/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              status,
+              registration: registrationId,
+              discipline: dId,
+              teacher: teacherId,
+            }),
+          })
+        )
+      );
       navigation.navigate("RegistrationCarts");
     } catch (error) {
       console.error("Erro ao criar carrinho:", error);
@@ -138,20 +148,20 @@ const CreateRegistrationCartScreen = ({ navigation }: Props) => {
         </TouchableOpacity>
       ))}
 
-      <Text style={styles.label}>Disciplina *</Text>
+      <Text style={styles.label}>Disciplinas * (selecione uma ou mais)</Text>
       {disciplines.map((d) => (
         <TouchableOpacity
           key={d.id}
           style={[
             styles.optionButton,
-            disciplineId === d.id && styles.optionSelected,
+            disciplineIds.includes(d.id) && styles.optionSelected,
           ]}
-          onPress={() => setDisciplineId(d.id)}
+          onPress={() => toggleDiscipline(d.id)}
         >
           <Text
             style={[
               styles.optionText,
-              disciplineId === d.id && styles.optionTextSelected,
+              disciplineIds.includes(d.id) && styles.optionTextSelected,
             ]}
           >
             {d.name}

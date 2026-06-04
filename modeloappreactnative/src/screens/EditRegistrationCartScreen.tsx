@@ -29,12 +29,20 @@ type TeacherBasic = {
   name: string;
 };
 
+type GroupedCartParam = {
+  ids: number[];
+  status: string;
+  registration: number;
+  teacher: number;
+  disciplineIds: number[];
+};
+
 const EditRegistrationCartScreen = ({ navigation, route }: Props) => {
   const { cart } = route.params;
 
   const [status, setStatus] = useState(cart.status);
   const [registrationId, setRegistrationId] = useState<number | null>(cart.registration);
-  const [disciplineId, setDisciplineId] = useState<number | null>(cart.discipline);
+  const [disciplineIds, setDisciplineIds] = useState<number[]>([cart.discipline]);
   const [teacherId, setTeacherId] = useState<number | null>(cart.teacher);
 
   const [registrations, setRegistrations] = useState<RegistrationBasic[]>([]);
@@ -67,22 +75,43 @@ const EditRegistrationCartScreen = ({ navigation, route }: Props) => {
     fetchOptions();
   }, []);
 
+  const toggleDiscipline = (id: number) => {
+    setDisciplineIds((prev) =>
+      prev.includes(id) ? prev.filter((d) => d !== id) : [...prev, id]
+    );
+  };
+
   const handleSave = async () => {
-    if (!registrationId || !disciplineId || !teacherId) {
+    if (!registrationId || disciplineIds.length === 0 || !teacherId) {
       alert("Preencha todos os campos obrigatórios.");
       return;
     }
     try {
-      await fetch(`http://localhost:8000/carrinhomatricula/${cart.id}/`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          status,
-          registration: registrationId,
-          discipline: disciplineId,
-          teacher: teacherId,
-        }),
-      });
+      // Deleta os carrinhos antigos do grupo
+      await Promise.all(
+        [cart.id].map((id) =>
+          fetch(`http://localhost:8000/carrinhomatricula/${id}/`, {
+            method: "DELETE",
+          })
+        )
+      );
+
+      // Cria novos carrinhos, um por disciplina
+      await Promise.all(
+        disciplineIds.map((dId) =>
+          fetch("http://localhost:8000/carrinhomatricula/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              status,
+              registration: registrationId,
+              discipline: dId,
+              teacher: teacherId,
+            }),
+          })
+        )
+      );
+
       navigation.navigate("RegistrationCarts");
     } catch (error) {
       console.error("Erro ao editar carrinho:", error);
@@ -130,20 +159,20 @@ const EditRegistrationCartScreen = ({ navigation, route }: Props) => {
         </TouchableOpacity>
       ))}
 
-      <Text style={styles.label}>Disciplina *</Text>
+      <Text style={styles.label}>Disciplinas * (selecione uma ou mais)</Text>
       {disciplines.map((d) => (
         <TouchableOpacity
           key={d.id}
           style={[
             styles.optionButton,
-            disciplineId === d.id && styles.optionSelected,
+            disciplineIds.includes(d.id) && styles.optionSelected,
           ]}
-          onPress={() => setDisciplineId(d.id)}
+          onPress={() => toggleDiscipline(d.id)}
         >
           <Text
             style={[
               styles.optionText,
-              disciplineId === d.id && styles.optionTextSelected,
+              disciplineIds.includes(d.id) && styles.optionTextSelected,
             ]}
           >
             {d.name}
