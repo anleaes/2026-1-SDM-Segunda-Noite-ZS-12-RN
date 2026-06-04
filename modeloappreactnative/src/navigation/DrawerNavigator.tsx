@@ -15,11 +15,14 @@ import EditClassScreen from "../screens/EditClassScreen";
 import EditClassroomScreen from "../screens/EditClassroomScreen";
 import EditDisciplineScreen from "../screens/EditDisciplineScreen";
 import EditParentScreen from "../screens/EditParentScreen";
+import EditRegistrationScreen from "../screens/EditRegistrationScreen";
 import EditStudentScreen from "../screens/EditStudentScreen";
 import EditTeacherScreen from "../screens/EditTeacherScreen";
 import HomeScreen from "../screens/HomeScreen";
 import ParentsScreen, { Parent } from "../screens/ParentsScreen";
-import RegistrationsScreen from "../screens/RegistrationsScreen";
+import RegistrationsScreen, {
+  Registration,
+} from "../screens/RegistrationsScreen";
 import StudentsScreen, { Student } from "../screens/StudentsScreen";
 import TeachersScreen, { Teacher } from "../screens/TeachersScreen";
 
@@ -45,6 +48,7 @@ export type DrawerParamList = {
   EditClassroom: { classroom: Classroom };
   Registrations: undefined;
   CreateRegistration: undefined;
+  EditRegistration: { registration: Registration };
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -232,6 +236,14 @@ const DrawerNavigator = () => {
         options={{
           drawerItemStyle: { display: "none" },
           title: "Nova matrícula",
+        }}
+      />
+      <Drawer.Screen
+        name="EditRegistration"
+        component={EditRegistrationScreen}
+        options={{
+          drawerItemStyle: { display: "none" },
+          title: "Editar matrícula",
         }}
       />
     </Drawer.Navigator>
