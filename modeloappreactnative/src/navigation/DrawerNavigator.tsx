@@ -9,6 +9,7 @@ import ClassesScreen, { Class } from "../screens/ClassesScreen";
 import ClassroomsScreen, { Classroom } from "../screens/ClassroomsScreen";
 import GradesScreen, { Grade } from "../screens/GradesScreen";
 import CreateGradeScreen from "../screens/CreateGradeScreen";
+import EditGradeScreen from "../screens/EditGradeScreen";
 import CreateClassScreen from "../screens/CreateClassScreen";
 import CreateClassroomScreen from "../screens/CreateClassroomScreen";
 import CreateDisciplineScreen from "../screens/CreateDisciplineScreen";
@@ -315,7 +316,7 @@ const DrawerNavigator = () => {
       />
       <Drawer.Screen
         name="EditGrade"
-        component={GradesScreen}
+        component={EditGradeScreen}
         options={{
           drawerItemStyle: { display: "none" },
           title: "Editar nota",
