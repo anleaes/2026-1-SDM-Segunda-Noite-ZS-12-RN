@@ -94,6 +94,16 @@ const RegistrationsScreen = ({ navigation }: Props) => {
       </Text>
       <Text style={styles.info}>Data: {formatDate(item.data_matricula)}</Text>
       <Text style={styles.info}>Situação: {item.situacao}</Text>
+      <View style={styles.row}>
+        <TouchableOpacity
+          style={styles.editButton}
+          onPress={() =>
+            navigation.navigate("EditRegistration", { registration: item })
+          }
+        >
+          <Text style={styles.buttonText}>Editar</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 
@@ -154,6 +164,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#666",
     marginTop: 4,
+  },
+  row: {
+    flexDirection: "row",
+    marginTop: 8,
+    alignSelf: "flex-end",
+  },
+  editButton: {
+    backgroundColor: "#4B7BE5",
+    padding: 8,
+    borderRadius: 6,
+    marginRight: 8,
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "500",
   },
   fab: {
     position: "absolute",
