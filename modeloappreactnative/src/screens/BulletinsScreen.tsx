@@ -4,7 +4,9 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useState } from "react";
 import {
     ActivityIndicator,
+    Alert,
     FlatList,
+    Platform,
     StyleSheet,
     Text,
     TouchableOpacity,
@@ -68,7 +70,7 @@ const BulletinsScreen = ({ navigation }: Props) => {
     }, []),
   );
 
-  const handleDelete = async (id: number) => {
+  const deleteBulletin = async (id: number) => {
     try {
       await fetch(`http://localhost:8000/bulletins/${id}/`, {
         method: "DELETE",
@@ -76,6 +78,26 @@ const BulletinsScreen = ({ navigation }: Props) => {
       setBulletins((prev) => prev.filter((b) => b.id !== id));
     } catch (error) {
       console.error("Erro ao excluir boletim:", error);
+    }
+  };
+
+  const confirmDelete = (item: Bulletin) => {
+    const studentName = studentNames[item.student] || "Aluno desconhecido";
+    const message = `Tem certeza que deseja excluir o boletim #${item.id} de ${studentName}?`;
+
+    if (Platform.OS === "web") {
+      if (window.confirm(message)) {
+        deleteBulletin(item.id);
+      }
+    } else {
+      Alert.alert("Confirmar exclusão", message, [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Excluir",
+          style: "destructive",
+          onPress: () => deleteBulletin(item.id),
+        },
+      ]);
     }
   };
 
@@ -102,7 +124,7 @@ const BulletinsScreen = ({ navigation }: Props) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.deleteButton}
-          onPress={() => handleDelete(item.id)}
+          onPress={() => confirmDelete(item)}
         >
           <Text style={styles.buttonText}>Excluir</Text>
         </TouchableOpacity>
