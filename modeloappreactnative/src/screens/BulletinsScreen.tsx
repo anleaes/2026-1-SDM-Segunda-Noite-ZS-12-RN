@@ -1,11 +1,15 @@
+import { Ionicons } from "@expo/vector-icons";
 import { DrawerScreenProps } from "@react-navigation/drawer";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useState } from "react";
 import {
     ActivityIndicator,
+    Alert,
     FlatList,
+    Platform,
     StyleSheet,
     Text,
+    TouchableOpacity,
     View,
 } from "react-native";
 import { DrawerParamList } from "../navigation/DrawerNavigator";
@@ -39,7 +43,6 @@ const BulletinsScreen = ({ navigation }: Props) => {
   const fetchAll = async () => {
     setLoading(true);
     try {
-      // 2 fetches em paralelo
       const [bulletinsResponse, studentsResponse] = await Promise.all([
         fetch("http://localhost:8000/bulletins/"),
         fetch("http://localhost:8000/estudante/"),
@@ -67,6 +70,37 @@ const BulletinsScreen = ({ navigation }: Props) => {
     }, []),
   );
 
+  const deleteBulletin = async (id: number) => {
+    try {
+      await fetch(`http://localhost:8000/bulletins/${id}/`, {
+        method: "DELETE",
+      });
+      setBulletins((prev) => prev.filter((b) => b.id !== id));
+    } catch (error) {
+      console.error("Erro ao excluir boletim:", error);
+    }
+  };
+
+  const confirmDelete = (item: Bulletin) => {
+    const studentName = studentNames[item.student] || "Aluno desconhecido";
+    const message = `Tem certeza que deseja excluir o boletim #${item.id} de ${studentName}?`;
+
+    if (Platform.OS === "web") {
+      if (window.confirm(message)) {
+        deleteBulletin(item.id);
+      }
+    } else {
+      Alert.alert("Confirmar exclusão", message, [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Excluir",
+          style: "destructive",
+          onPress: () => deleteBulletin(item.id),
+        },
+      ]);
+    }
+  };
+
   const renderItem = ({ item }: { item: Bulletin }) => (
     <View style={styles.card}>
       <Text style={styles.name}>Boletim #{item.id}</Text>
@@ -79,6 +113,22 @@ const BulletinsScreen = ({ navigation }: Props) => {
         Situação final:{" "}
         {SITUATION_LABELS[item.final_situation] || item.final_situation}
       </Text>
+      <View style={styles.row}>
+        <TouchableOpacity
+          style={styles.editButton}
+          onPress={() =>
+            navigation.navigate("EditBulletin", { bulletin: item })
+          }
+        >
+          <Text style={styles.buttonText}>Editar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={() => confirmDelete(item)}
+        >
+          <Text style={styles.buttonText}>Excluir</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 
@@ -95,6 +145,12 @@ const BulletinsScreen = ({ navigation }: Props) => {
           contentContainerStyle={{ paddingBottom: 20 }}
         />
       )}
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => navigation.navigate("CreateBulletin")}
+      >
+        <Ionicons name="add" size={28} color="#fff" />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -133,6 +189,35 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#666",
     marginTop: 4,
+  },
+  row: {
+    flexDirection: "row",
+    marginTop: 8,
+    alignSelf: "flex-end",
+  },
+  editButton: {
+    backgroundColor: "#4B7BE5",
+    padding: 8,
+    borderRadius: 6,
+    marginRight: 8,
+  },
+  deleteButton: {
+    backgroundColor: "#E54848",
+    padding: 8,
+    borderRadius: 6,
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "500",
+  },
+  fab: {
+    position: "absolute",
+    right: 20,
+    bottom: 20,
+    backgroundColor: "#0D47A1",
+    borderRadius: 28,
+    padding: 14,
+    elevation: 4,
   },
 });
 

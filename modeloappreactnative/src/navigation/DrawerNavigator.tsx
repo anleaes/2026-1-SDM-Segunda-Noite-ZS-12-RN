@@ -13,6 +13,10 @@ import EditBulletinItemScreen from "../screens/EditBulletinItemScreen";
 import CreateGradeScreen from "../screens/CreateGradeScreen";
 import CreateBulletinItemScreen from "../screens/CreateBulletinItemScreen";
 import EditGradeScreen from "../screens/EditGradeScreen";
+import BulletinsScreen, { Bulletin } from "../screens/BulletinsScreen";
+import ClassesScreen, { Class } from "../screens/ClassesScreen";
+import ClassroomsScreen, { Classroom } from "../screens/ClassroomsScreen";
+import CreateBulletinScreen from "../screens/CreateBulletinScreen";
 import CreateClassScreen from "../screens/CreateClassScreen";
 import CreateClassroomScreen from "../screens/CreateClassroomScreen";
 import CreateDisciplineScreen from "../screens/CreateDisciplineScreen";
@@ -21,6 +25,7 @@ import CreateRegistrationScreen from "../screens/CreateRegistrationScreen";
 import CreateStudentScreen from "../screens/CreateStudentScreen";
 import CreateTeacherScreen from "../screens/CreateTeacherScreen";
 import DisciplinesScreen, { Discipline } from "../screens/DisciplinesScreen";
+import EditBulletinScreen from "../screens/EditBulletinScreen";
 import EditClassScreen from "../screens/EditClassScreen";
 import EditClassroomScreen from "../screens/EditClassroomScreen";
 import EditDisciplineScreen from "../screens/EditDisciplineScreen";
@@ -69,6 +74,8 @@ export type DrawerParamList = {
   BulletinItems: undefined;
   CreateBulletinItem: undefined;
   EditBulletinItem: { item: BulletinItem };
+  CreateBulletin: undefined;
+  EditBulletin: { bulletin: Bulletin };
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -352,6 +359,19 @@ const DrawerNavigator = () => {
         options={{
           drawerItemStyle: { display: "none" },
           title: "Editar item",
+        name="CreateBulletin"
+        component={CreateBulletinScreen}
+        options={{
+          drawerItemStyle: { display: "none" },
+          title: "Novo boletim",
+        }}
+      />
+      <Drawer.Screen
+        name="EditBulletin"
+        component={EditBulletinScreen}
+        options={{
+          drawerItemStyle: { display: "none" },
+          title: "Editar boletim",
         }}
       />
     </Drawer.Navigator>
