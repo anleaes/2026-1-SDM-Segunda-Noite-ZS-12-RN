@@ -7,6 +7,7 @@ import CreateClassScreen from "../screens/CreateClassScreen";
 import CreateClassroomScreen from "../screens/CreateClassroomScreen";
 import CreateDisciplineScreen from "../screens/CreateDisciplineScreen";
 import CreateParentScreen from "../screens/CreateParentScreen";
+import CreateRegistrationScreen from "../screens/CreateRegistrationScreen";
 import CreateStudentScreen from "../screens/CreateStudentScreen";
 import CreateTeacherScreen from "../screens/CreateTeacherScreen";
 import DisciplinesScreen, { Discipline } from "../screens/DisciplinesScreen";
@@ -43,6 +44,7 @@ export type DrawerParamList = {
   CreateClassroom: undefined;
   EditClassroom: { classroom: Classroom };
   Registrations: undefined;
+  CreateRegistration: undefined;
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -222,6 +224,14 @@ const DrawerNavigator = () => {
             <Ionicons name="document-text-outline" size={size} color={color} />
           ),
           title: "Matrículas",
+        }}
+      />
+      <Drawer.Screen
+        name="CreateRegistration"
+        component={CreateRegistrationScreen}
+        options={{
+          drawerItemStyle: { display: "none" },
+          title: "Nova matrícula",
         }}
       />
     </Drawer.Navigator>
