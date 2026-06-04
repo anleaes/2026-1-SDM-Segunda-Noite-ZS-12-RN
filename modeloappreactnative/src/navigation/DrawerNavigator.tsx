@@ -1,43 +1,38 @@
 import { Ionicons } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import CustomDrawerContent from "../components/CustomDrawerContent";
-import BulletinsScreen from "../screens/BulletinsScreen";
-import RegistrationCartScreen, { RegistrationCart } from "../screens/RegistrationCartScreen";
-import EditRegistrationCartScreen from "../screens/EditRegistrationCartScreen";
-import CreateRegistrationCartScreen from "../screens/CreateRegistrationCartScreen";
-import ClassesScreen, { Class } from "../screens/ClassesScreen";
-import ClassroomsScreen, { Classroom } from "../screens/ClassroomsScreen";
-import GradesScreen, { Grade } from "../screens/GradesScreen";
 import BulletinItemsScreen, { BulletinItem } from "../screens/BulletinItemsScreen";
-import EditBulletinItemScreen from "../screens/EditBulletinItemScreen";
-import CreateGradeScreen from "../screens/CreateGradeScreen";
-import CreateBulletinItemScreen from "../screens/CreateBulletinItemScreen";
-import EditGradeScreen from "../screens/EditGradeScreen";
 import BulletinsScreen, { Bulletin } from "../screens/BulletinsScreen";
 import ClassesScreen, { Class } from "../screens/ClassesScreen";
 import ClassroomsScreen, { Classroom } from "../screens/ClassroomsScreen";
+import CreateBulletinItemScreen from "../screens/CreateBulletinItemScreen";
 import CreateBulletinScreen from "../screens/CreateBulletinScreen";
 import CreateClassScreen from "../screens/CreateClassScreen";
 import CreateClassroomScreen from "../screens/CreateClassroomScreen";
 import CreateDisciplineScreen from "../screens/CreateDisciplineScreen";
+import CreateGradeScreen from "../screens/CreateGradeScreen";
 import CreateParentScreen from "../screens/CreateParentScreen";
+import CreateRegistrationCartScreen from "../screens/CreateRegistrationCartScreen";
 import CreateRegistrationScreen from "../screens/CreateRegistrationScreen";
 import CreateStudentScreen from "../screens/CreateStudentScreen";
 import CreateTeacherScreen from "../screens/CreateTeacherScreen";
 import DisciplinesScreen, { Discipline } from "../screens/DisciplinesScreen";
+import EditBulletinItemScreen from "../screens/EditBulletinItemScreen";
 import EditBulletinScreen from "../screens/EditBulletinScreen";
 import EditClassScreen from "../screens/EditClassScreen";
 import EditClassroomScreen from "../screens/EditClassroomScreen";
 import EditDisciplineScreen from "../screens/EditDisciplineScreen";
+import EditGradeScreen from "../screens/EditGradeScreen";
 import EditParentScreen from "../screens/EditParentScreen";
+import EditRegistrationCartScreen from "../screens/EditRegistrationCartScreen";
 import EditRegistrationScreen from "../screens/EditRegistrationScreen";
 import EditStudentScreen from "../screens/EditStudentScreen";
 import EditTeacherScreen from "../screens/EditTeacherScreen";
+import GradesScreen, { Grade } from "../screens/GradesScreen";
 import HomeScreen from "../screens/HomeScreen";
 import ParentsScreen, { Parent } from "../screens/ParentsScreen";
-import RegistrationsScreen, {
-  Registration,
-} from "../screens/RegistrationsScreen";
+import RegistrationCartScreen, { RegistrationCart } from "../screens/RegistrationCartScreen";
+import RegistrationsScreen, { Registration } from "../screens/RegistrationsScreen";
 import StudentsScreen, { Student } from "../screens/StudentsScreen";
 import TeachersScreen, { Teacher } from "../screens/TeachersScreen";
 
@@ -65,6 +60,8 @@ export type DrawerParamList = {
   CreateRegistration: undefined;
   EditRegistration: { registration: Registration };
   Bulletins: undefined;
+  CreateBulletin: undefined;
+  EditBulletin: { bulletin: Bulletin };
   RegistrationCarts: undefined;
   CreateRegistrationCart: undefined;
   EditRegistrationCart: { cart: RegistrationCart };
@@ -74,8 +71,6 @@ export type DrawerParamList = {
   BulletinItems: undefined;
   CreateBulletinItem: undefined;
   EditBulletinItem: { item: BulletinItem };
-  CreateBulletin: undefined;
-  EditBulletin: { bulletin: Bulletin };
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -284,6 +279,22 @@ const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
+        name="CreateBulletin"
+        component={CreateBulletinScreen}
+        options={{
+          drawerItemStyle: { display: "none" },
+          title: "Novo boletim",
+        }}
+      />
+      <Drawer.Screen
+        name="EditBulletin"
+        component={EditBulletinScreen}
+        options={{
+          drawerItemStyle: { display: "none" },
+          title: "Editar boletim",
+        }}
+      />
+      <Drawer.Screen
         name="RegistrationCarts"
         component={RegistrationCartScreen}
         options={{
@@ -359,19 +370,6 @@ const DrawerNavigator = () => {
         options={{
           drawerItemStyle: { display: "none" },
           title: "Editar item",
-        name="CreateBulletin"
-        component={CreateBulletinScreen}
-        options={{
-          drawerItemStyle: { display: "none" },
-          title: "Novo boletim",
-        }}
-      />
-      <Drawer.Screen
-        name="EditBulletin"
-        component={EditBulletinScreen}
-        options={{
-          drawerItemStyle: { display: "none" },
-          title: "Editar boletim",
         }}
       />
     </Drawer.Navigator>
