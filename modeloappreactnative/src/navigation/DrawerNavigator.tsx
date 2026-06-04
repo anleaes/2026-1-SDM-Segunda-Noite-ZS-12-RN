@@ -10,6 +10,7 @@ import ClassroomsScreen, { Classroom } from "../screens/ClassroomsScreen";
 import GradesScreen, { Grade } from "../screens/GradesScreen";
 import BulletinItemsScreen, { BulletinItem } from "../screens/BulletinItemsScreen";
 import CreateGradeScreen from "../screens/CreateGradeScreen";
+import CreateBulletinItemScreen from "../screens/CreateBulletinItemScreen";
 import EditGradeScreen from "../screens/EditGradeScreen";
 import CreateClassScreen from "../screens/CreateClassScreen";
 import CreateClassroomScreen from "../screens/CreateClassroomScreen";
@@ -338,7 +339,7 @@ const DrawerNavigator = () => {
       />
       <Drawer.Screen
         name="CreateBulletinItem"
-        component={BulletinItemsScreen}
+        component={CreateBulletinItemScreen}
         options={{
           drawerItemStyle: { display: "none" },
           title: "Novo item",
