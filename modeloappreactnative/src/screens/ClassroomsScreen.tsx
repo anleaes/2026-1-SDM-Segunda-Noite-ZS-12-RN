@@ -4,7 +4,9 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useState } from "react";
 import {
     ActivityIndicator,
+    Alert,
     FlatList,
+    Platform,
     StyleSheet,
     Text,
     TouchableOpacity,
@@ -86,6 +88,36 @@ const ClassroomsScreen = ({ navigation }: Props) => {
     }, []),
   );
 
+  const deleteClassroom = async (id: number) => {
+    try {
+      await fetch(`http://localhost:8000/aula/${id}/`, {
+        method: "DELETE",
+      });
+      setClassrooms((prev) => prev.filter((c) => c.id !== id));
+    } catch (error) {
+      console.error("Erro ao excluir aula:", error);
+    }
+  };
+
+  const confirmDelete = (item: Classroom) => {
+    const message = `Tem certeza que deseja excluir a aula da Sala ${item.sala}?`;
+
+    if (Platform.OS === "web") {
+      if (window.confirm(message)) {
+        deleteClassroom(item.id);
+      }
+    } else {
+      Alert.alert("Confirmar exclusão", message, [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Excluir",
+          style: "destructive",
+          onPress: () => deleteClassroom(item.id),
+        },
+      ]);
+    }
+  };
+
   const renderItem = ({ item }: { item: Classroom }) => (
     <View style={styles.card}>
       <Text style={styles.name}>Sala: {item.sala}</Text>
@@ -105,6 +137,12 @@ const ClassroomsScreen = ({ navigation }: Props) => {
           }
         >
           <Text style={styles.buttonText}>Editar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={() => confirmDelete(item)}
+        >
+          <Text style={styles.buttonText}>Excluir</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -178,6 +216,11 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 6,
     marginRight: 8,
+  },
+  deleteButton: {
+    backgroundColor: "#E54848",
+    padding: 8,
+    borderRadius: 6,
   },
   buttonText: {
     color: "#fff",
