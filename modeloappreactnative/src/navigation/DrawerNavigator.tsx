@@ -9,6 +9,7 @@ import ClassesScreen, { Class } from "../screens/ClassesScreen";
 import ClassroomsScreen, { Classroom } from "../screens/ClassroomsScreen";
 import GradesScreen, { Grade } from "../screens/GradesScreen";
 import BulletinItemsScreen, { BulletinItem } from "../screens/BulletinItemsScreen";
+import EditBulletinItemScreen from "../screens/EditBulletinItemScreen";
 import CreateGradeScreen from "../screens/CreateGradeScreen";
 import CreateBulletinItemScreen from "../screens/CreateBulletinItemScreen";
 import EditGradeScreen from "../screens/EditGradeScreen";
@@ -347,7 +348,7 @@ const DrawerNavigator = () => {
       />
       <Drawer.Screen
         name="EditBulletinItem"
-        component={BulletinItemsScreen}
+        component={EditBulletinItemScreen}
         options={{
           drawerItemStyle: { display: "none" },
           title: "Editar item",
