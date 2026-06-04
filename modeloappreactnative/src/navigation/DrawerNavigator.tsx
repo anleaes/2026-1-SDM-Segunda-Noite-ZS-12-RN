@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import CustomDrawerContent from "../components/CustomDrawerContent";
 import ClassesScreen, { Class } from "../screens/ClassesScreen";
-import ClassroomsScreen from "../screens/ClassroomsScreen";
+import ClassroomsScreen, { Classroom } from "../screens/ClassroomsScreen";
 import CreateClassScreen from "../screens/CreateClassScreen";
 import CreateClassroomScreen from "../screens/CreateClassroomScreen";
 import CreateDisciplineScreen from "../screens/CreateDisciplineScreen";
@@ -11,6 +11,7 @@ import CreateStudentScreen from "../screens/CreateStudentScreen";
 import CreateTeacherScreen from "../screens/CreateTeacherScreen";
 import DisciplinesScreen, { Discipline } from "../screens/DisciplinesScreen";
 import EditClassScreen from "../screens/EditClassScreen";
+import EditClassroomScreen from "../screens/EditClassroomScreen";
 import EditDisciplineScreen from "../screens/EditDisciplineScreen";
 import EditParentScreen from "../screens/EditParentScreen";
 import EditStudentScreen from "../screens/EditStudentScreen";
@@ -39,6 +40,7 @@ export type DrawerParamList = {
   EditStudent: { student: Student };
   Classrooms: undefined;
   CreateClassroom: undefined;
+  EditClassroom: { classroom: Classroom };
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -204,6 +206,11 @@ const DrawerNavigator = () => {
         name="CreateClassroom"
         component={CreateClassroomScreen}
         options={{ drawerItemStyle: { display: "none" }, title: "Nova aula" }}
+      />
+      <Drawer.Screen
+        name="EditClassroom"
+        component={EditClassroomScreen}
+        options={{ drawerItemStyle: { display: "none" }, title: "Editar aula" }}
       />
     </Drawer.Navigator>
   );
