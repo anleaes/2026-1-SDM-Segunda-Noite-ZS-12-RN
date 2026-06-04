@@ -1,5 +1,6 @@
 import { DrawerScreenProps } from "@react-navigation/drawer";
-import { useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback, useState } from "react";
 import {
     ActivityIndicator,
     FlatList,
@@ -19,6 +20,11 @@ export type Bulletin = {
   student: number;
 };
 
+type StudentBasic = {
+  id: number;
+  name: string;
+};
+
 const SITUATION_LABELS: Record<string, string> = {
   aprovado: "Aprovado",
   reprovado: "Reprovado",
@@ -28,13 +34,44 @@ const SITUATION_LABELS: Record<string, string> = {
 const BulletinsScreen = ({ navigation }: Props) => {
   const [bulletins, setBulletins] = useState<Bulletin[]>([]);
   const [studentNames, setStudentNames] = useState<Record<number, string>>({});
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const fetchAll = async () => {
+    setLoading(true);
+    try {
+      // 2 fetches em paralelo
+      const [bulletinsResponse, studentsResponse] = await Promise.all([
+        fetch("http://localhost:8000/bulletins/"),
+        fetch("http://localhost:8000/estudante/"),
+      ]);
+
+      const bulletinsData: Bulletin[] = await bulletinsResponse.json();
+      const studentsData: StudentBasic[] = await studentsResponse.json();
+
+      const studentMap: Record<number, string> = {};
+      studentsData.forEach((s) => {
+        studentMap[s.id] = s.name;
+      });
+
+      setBulletins(bulletinsData);
+      setStudentNames(studentMap);
+    } catch (error) {
+      console.error("Erro ao buscar boletins e alunos:", error);
+    }
+    setLoading(false);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchAll();
+    }, []),
+  );
 
   const renderItem = ({ item }: { item: Bulletin }) => (
     <View style={styles.card}>
       <Text style={styles.name}>Boletim #{item.id}</Text>
       <Text style={styles.info}>
-        Aluno: {studentNames[item.student] || "Carregando..."}
+        Aluno: {studentNames[item.student] || "Desconhecido"}
       </Text>
       <Text style={styles.info}>Ano letivo: {item.school_year}</Text>
       <Text style={styles.info}>Semestre: {item.semester}º</Text>
